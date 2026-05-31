@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Learning – Day 1 Exercises</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #faf7f0;
+    --accent: #e63946;
+    --gold: #f4a261;
+    --teal: #2a9d8f;
+    --soft: #e9ecef;
+    --correct: #2a9d8f;
+    --wrong: #e63946;
+    --muted: #6c757d;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 60px 24px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 80px);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero p {
+    font-size: 1rem;
+    opacity: .7;
+    max-width: 500px;
+    margin: 0 auto 30px;
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding: 24px;
+    background: #fff;
+    border-bottom: 2px solid var(--soft);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--ink);
+    display: block;
+  }
+  .stat-num.score-num { color: var(--teal); }
+  .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+
+  /* SECTIONS */
+  .section {
+    max-width: 820px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .chip {
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .section-sub {
+    font-size: .85rem;
+    color: var(--muted);
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #ddd;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    border: 1.5px solid #eee;
+    transition: border-color .2s;
+  }
+  .q-card:hover { border-color: #ccc; }
+  .q-num {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .q-text {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+
+  /* MCQ OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: .93rem;
+    transition: all .18s;
+    background: var(--paper);
+    user-select: none;
+  }
+  .option:hover { border-color: var(--ink); background: #f0ede6; }
+  .option.selected { border-color: var(--ink); background: var(--ink); color: #fff; }
+  .option.correct { border-color: var(--correct); background: #e8f7f5; color: var(--correct); font-weight: 600; }
+  .option.wrong { border-color: var(--wrong); background: #fdecea; color: var(--wrong); }
+  .option.reveal-correct { border-color: var(--correct); background: #e8f7f5; color: var(--correct); }
+  .opt-key {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #eee;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: background .18s;
+  }
+  .option.selected .opt-key { background: rgba(255,255,255,0.2); }
+  .option.correct .opt-key { background: var(--correct); color: #fff; }
+  .option.wrong .opt-key { background: var(--wrong); color: #fff; }
+
+  /* FEEDBACK */
+  .feedback {
+    margin-top: 10px;
+    font-size: .85rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: #e8f7f5; color: var(--correct); }
+  .feedback.wrong-fb { background: #fdecea; color: var(--wrong); }
+
+  /* FILL IN THE BLANK */
+  .fill-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .fill-input {
+    border: 1.5px solid #e0e0e0;
+    border-radius: 9px;
+    padding: 10px 14px;
+    font-size: .93rem;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color .2s;
+    background: var(--paper);
+    width: 100%;
+  }
+  .fill-input:focus { border-color: var(--ink); }
+  .fill-input.correct { border-color: var(--correct); background: #e8f7f5; color: var(--correct); }
+  .fill-input.wrong { border-color: var(--wrong); background: #fdecea; color: var(--wrong); }
+  .check-btn {
+    align-self: flex-start;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .18s;
+  }
+  .check-btn:hover { background: #2c2c4a; }
+  .check-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+  /* TRUE/FALSE */
+  .tf-wrap { display: flex; gap: 10px; }
+  .tf-btn {
+    flex: 1;
+    padding: 10px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 9px;
+    background: var(--paper);
+    font-family: 'DM Sans', sans-serif;
+    font-size: .93rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .18s;
+  }
+  .tf-btn:hover { border-color: var(--ink); background: #f0ede6; }
+  .tf-btn.selected { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .tf-btn.correct { background: #e8f7f5; color: var(--correct); border-color: var(--correct); }
+  .tf-btn.wrong { background: #fdecea; color: var(--wrong); border-color: var(--wrong); }
+
+  /* MATCH */
+  .match-wrap { display: flex; flex-direction: column; gap: 10px; }
+  .match-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 10px;
+  }
+  .match-term {
+    background: var(--ink);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 9px;
+    font-size: .9rem;
+    font-weight: 500;
+  }
+  .match-arrow { color: var(--muted); font-size: 1.2rem; }
+  .match-sel {
+    border: 1.5px solid #e0e0e0;
+    border-radius: 9px;
+    padding: 9px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .9rem;
+    background: var(--paper);
+    outline: none;
+    cursor: pointer;
+    transition: border-color .2s;
+    width: 100%;
+  }
+  .match-sel:focus { border-color: var(--ink); }
+  .match-sel.correct { border-color: var(--correct); background: #e8f7f5; color: var(--correct); }
+  .match-sel.wrong { border-color: var(--wrong); background: #fdecea; color: var(--wrong); }
+
+  /* SUBMIT SECTION */
+  .submit-section {
+    max-width: 820px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+    text-align: center;
+  }
+  .submit-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 16px 48px;
+    border-radius: 12px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 4px 20px rgba(230,57,70,0.3);
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(230,57,70,0.4); }
+
+  /* RESULT MODAL */
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(26,26,46,0.85);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s;
+  }
+  .overlay.show { opacity: 1; pointer-events: all; }
+  .result-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 48px 40px;
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+    transform: scale(.9);
+    transition: transform .3s;
+  }
+  .overlay.show .result-card { transform: scale(1); }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+  .result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .result-score {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .result-score strong { color: var(--teal); font-size: 1.5rem; }
+  .progress-bar {
+    background: #eee;
+    border-radius: 99px;
+    height: 12px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+    transition: width 1s ease;
+  }
+  .retry-btn {
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .retry-btn:hover { background: #2c2c4a; }
+
+  @media (max-width: 480px) {
+    .match-row { grid-template-columns: 1fr; }
+    .match-arrow { display: none; }
+    .stats-bar { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Day 1 Practice</div>
+  <h1>English Grammar<br><span>Exercise Book</span></h1>
+  <p>Parts of Speech · Tenses · 100+ questions to test your knowledge</p>
+</div>
+
+<!-- STICKY STATS -->
+<div class="stats-bar">
+  <div class="stat">
+    <span class="stat-num" id="totalQ">108</span>
+    <span class="stat-label">Questions</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num" id="answeredQ">0</span>
+    <span class="stat-label">Answered</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num score-num" id="correctQ">0</span>
+    <span class="stat-label">Correct</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num" id="scoreQ">0%</span>
+    <span class="stat-label">Score</span>
+  </div>
+</div>
+
+<div id="quiz-container"></div>
+
+<div class="submit-section">
+  <button class="submit-btn" onclick="showResult()">📊 See My Final Score</button>
+</div>
+
+<!-- RESULT OVERLAY -->
+<div class="overlay" id="overlay">
+  <div class="result-card">
+    <div class="result-emoji" id="res-emoji">🎉</div>
+    <div class="result-title" id="res-title">Great Work!</div>
+    <div class="result-score" id="res-score">You scored <strong>0/0</strong></div>
+    <div class="progress-bar"><div class="progress-fill" id="res-bar" style="width:0%"></div></div>
+    <button class="retry-btn" onclick="retryAll()">🔄 Try Again</button>
+  </div>
+</div>
+
+<script>
+// ===================== QUIZ DATA =====================
+const sections = [
+  {
+    title: "Identify the Part of Speech",
+    chip: "MCQ",
+    sub: "Choose the correct part of speech for the underlined word.",
+    questions: [
+      { type:"mcq", q:"<u>Ravi</u> is a good boy.", options:["Verb","Noun","Pronoun","Adjective"], ans:1 },
+      { type:"mcq", q:"She <u>writes</u> a letter.", options:["Noun","Adverb","Verb","Preposition"], ans:2 },
+      { type:"mcq", q:"He walks <u>slowly</u>.", options:["Adjective","Adverb","Verb","Conjunction"], ans:1 },
+      { type:"mcq", q:"She is a <u>tall</u> girl.", options:["Adverb","Verb","Adjective","Pronoun"], ans:2 },
+      { type:"mcq", q:"The book is <u>on</u> the table.", options:["Conjunction","Adjective","Verb","Preposition"], ans:3 },
+      { type:"mcq", q:"<u>Wow!</u> That is amazing.", options:["Noun","Verb","Interjection","Adverb"], ans:2 },
+      { type:"mcq", q:"Ravi <u>and</u> Kumar are friends.", options:["Preposition","Conjunction","Pronoun","Verb"], ans:1 },
+      { type:"mcq", q:"<u>They</u> play cricket.", options:["Noun","Adjective","Pronoun","Verb"], ans:2 },
+      { type:"mcq", q:"The cat is <u>under</u> the chair.", options:["Adverb","Adjective","Conjunction","Preposition"], ans:3 },
+      { type:"mcq", q:"<u>Oops!</u> I dropped my pen.", options:["Verb","Interjection","Noun","Pronoun"], ans:1 },
+      { type:"mcq", q:"She waited <u>until</u> evening.", options:["Adjective","Preposition","Conjunction","Adverb"], ans:2 },
+      { type:"mcq", q:"The <u>happy</u> child is singing.", options:["Adverb","Verb","Adjective","Noun"], ans:2 },
+      { type:"mcq", q:"<u>Chennai</u> is a big city.", options:["Pronoun","Noun","Verb","Adjective"], ans:1 },
+      { type:"mcq", q:"She writes <u>very quickly</u>.", options:["Verb","Adjective","Adverb","Noun"], ans:2 },
+      { type:"mcq", q:"The dog <u>runs</u> fast.", options:["Noun","Adverb","Adjective","Verb"], ans:3 },
+    ]
+  },
+  {
+    title: "True or False",
+    chip: "T/F",
+    sub: "Decide if the statement is TRUE or FALSE.",
+    questions: [
+      { type:"tf", q:"A noun is the name of a person, place, animal, or thing.", ans:"True" },
+      { type:"tf", q:"A pronoun replaces a verb in a sentence.", ans:"False" },
+      { type:"tf", q:"'Run', 'Write', and 'Eat' are examples of verbs.", ans:"True" },
+      { type:"tf", q:"An adverb describes a noun.", ans:"False" },
+      { type:"tf", q:"'Tall', 'Happy', and 'Beautiful' are adjectives.", ans:"True" },
+      { type:"tf", q:"A preposition shows the relationship between words in a sentence.", ans:"True" },
+      { type:"tf", q:"'Wow!' and 'Oops!' are examples of conjunctions.", ans:"False" },
+      { type:"tf", q:"'And', 'But', and 'Because' are conjunctions.", ans:"True" },
+      { type:"tf", q:"There are 10 parts of speech in English.", ans:"False" },
+      { type:"tf", q:"'He', 'She', 'It', 'They' are pronouns.", ans:"True" },
+      { type:"tf", q:"An adjective describes a verb.", ans:"False" },
+      { type:"tf", q:"'In', 'On', 'Under', 'Near' are examples of prepositions.", ans:"True" },
+      { type:"tf", q:"The Simple Present Tense uses V₁ + s/es for singular subjects.", ans:"True" },
+      { type:"tf", q:"'Does not' is used with plural subjects in negative sentences.", ans:"False" },
+    ]
+  },
+  {
+    title: "Fill in the Blank",
+    chip: "Fill",
+    sub: "Type the correct word to complete the sentence.",
+    questions: [
+      { type:"fill", q:"A ___ is the name of a person, place, animal, or thing.", ans:"noun" },
+      { type:"fill", q:"A word used instead of a noun is called a ___.", ans:"pronoun" },
+      { type:"fill", q:"A ___ shows an action.", ans:"verb" },
+      { type:"fill", q:"An ___ describes a verb.", ans:"adverb" },
+      { type:"fill", q:"An ___ describes a noun or pronoun.", ans:"adjective" },
+      { type:"fill", q:"A ___ shows the relationship between words.", ans:"preposition" },
+      { type:"fill", q:"An ___ shows emotions or feelings.", ans:"interjection" },
+      { type:"fill", q:"A ___ joins words or sentences.", ans:"conjunction" },
+      { type:"fill", q:"There are ___ parts of speech.", ans:"8" },
+      { type:"fill", q:"She ___ a letter. (Simple Present, singular)", ans:"writes" },
+      { type:"fill", q:"They ___ cricket. (Simple Present, plural)", ans:"play" },
+      { type:"fill", q:"She ___ not write a letter. (Negative, singular)", ans:"does" },
+      { type:"fill", q:"They ___ not play cricket. (Negative, plural)", ans:"do" },
+      { type:"fill", q:"___ she write a letter? (Interrogative, singular)", ans:"Does" },
+      { type:"fill", q:"___ they play cricket? (Interrogative, plural)", ans:"Do" },
+    ]
+  },
+  {
+    title: "Simple Present Tense",
+    chip: "MCQ",
+    sub: "Choose the correct sentence structure or word.",
+    questions: [
+      { type:"mcq", q:"Which is the correct affirmative (singular) structure?", options:["Subject + V₁ + Object","Subject + V₁ + s/es + Object","Does + Subject + V₁","Subject + do + V₁"], ans:1 },
+      { type:"mcq", q:"Which sentence is correct in Simple Present (singular)?", options:["She write a letter.","She does writes a letter.","She writes a letter.","She writing a letter."], ans:2 },
+      { type:"mcq", q:"Negative form (singular): She ___ not write a letter.", options:["do","did","does","is"], ans:2 },
+      { type:"mcq", q:"Interrogative form (plural): ___ they play cricket?", options:["Does","Did","Is","Do"], ans:3 },
+      { type:"mcq", q:"Which is the correct plural affirmative structure?", options:["Subject + V₁ + s/es + Object","Subject + V₁ + Object","Do + Subject + V₁ + Object","Subject + does + V₁ + Object"], ans:1 },
+      { type:"mcq", q:"Interrogative Negative (singular): Does she ___ write a letter?", options:["do","not","does","is"], ans:1 },
+      { type:"mcq", q:"Which sentence is correct (plural)?", options:["They plays cricket.","They does play cricket.","They play cricket.","They is playing cricket."], ans:2 },
+      { type:"mcq", q:"The Simple Present Tense is used for:", options:["Future plans only","Habits and regular actions","Past events","Completed actions"], ans:1 },
+      { type:"mcq", q:"Interrogative Negative (plural): Do they ___ play cricket?", options:["not","does","is","did"], ans:0 },
+      { type:"mcq", q:"Which shows a 'general truth' in Simple Present?", options:["She was sleeping.","The sun rises in the east.","He will run.","They played well."], ans:1 },
+    ]
+  },
+  {
+    title: "Choose the Correct Sentence",
+    chip: "MCQ",
+    sub: "Pick the grammatically correct sentence.",
+    questions: [
+      { type:"mcq", q:"Which sentence has the correct noun usage?", options:["Chennai is run very fast.","Chennai is a big city.","Chennai are beautiful.","Chennai do good."], ans:1 },
+      { type:"mcq", q:"Which uses the pronoun correctly?", options:["Ravi is my friend. It is kind.","Ravi is my friend. He is kind.","Ravi is my friend. She is kind.","Ravi is my friend. They is kind."], ans:1 },
+      { type:"mcq", q:"Which sentence uses an adjective correctly?", options:["She runs tall.","She is a tall girl.","She tallly runs.","She do tall."], ans:1 },
+      { type:"mcq", q:"Which uses an adverb correctly?", options:["He walks slow very.","He very slowly walks.","He walks slowly.","He slowly is walk."], ans:2 },
+      { type:"mcq", q:"Which sentence uses a preposition correctly?", options:["The book is on the table.","The book on is the table.","The book is the table on.","On the book is table the."], ans:0 },
+      { type:"mcq", q:"Which uses an interjection correctly?", options:["Amazing that wow is!","Wow! That is amazing.","That wow amazing is.","Is that wow amazing."], ans:1 },
+      { type:"mcq", q:"Which uses a conjunction correctly?", options:["Ravi but Kumar are friends.","Ravi and Kumar are friends.","Ravi on Kumar are friends.","Ravi wow Kumar are friends."], ans:1 },
+      { type:"mcq", q:"Which sentence is in Simple Present (correct)?", options:["She writed a letter.","She will writes a letter.","She writes a letter.","She wrote a letter."], ans:2 },
+      { type:"mcq", q:"Which is the correct negative sentence (plural)?", options:["They does not play.","They do not play cricket.","They not play cricket.","They do not plays cricket."], ans:1 },
+      { type:"mcq", q:"Which is the correct interrogative (singular)?", options:["Do she write a letter?","Does she writes a letter?","Does she write a letter?","She does write a letter?"], ans:2 },
+    ]
+  },
+  {
+    title: "Match the Column",
+    chip: "Match",
+    sub: "Match each word with its correct part of speech.",
+    questions: [
+      {
+        type: "match",
+        pairs: [
+          { term: "Ravi", options: ["Noun","Verb","Adverb","Adjective","Pronoun","Conjunction","Interjection","Preposition"], ans: "Noun" },
+          { term: "Runs", options: ["Noun","Verb","Adverb","Adjective","Pronoun","Conjunction","Interjection","Preposition"], ans: "Verb" },
+          { term: "Quickly", options: ["Noun","Verb","Adverb","Adjective","Pronoun","Conjunction","Interjection","Preposition"], ans: "Adverb" },
+          { term: "Beautiful", options: ["Noun","Verb","Adverb","Adjective","Pronoun","Conjunction","Interjection","Preposition"], ans: "Adjective" },
+          { term: "She", options: ["Noun","Verb","Adverb","Adjective","Pronoun","Conjunction","Interjection","Preposition"], ans: "Pronoun" },
+          { term: "And", options: ["Noun","Verb","Adverb","Adjective","Pronoun","Conjunction","Interjection","Preposition"], ans: "Conjunction" },
+          { term: "Wow!", options: ["Noun","Verb","Adverb","Adjective","Pronoun","Conjunction","Interjection","Preposition"], ans: "Interjection" },
+          { term: "Under", options: ["Noun","Verb","Adverb","Adjective","Pronoun","Conjunction","Interjection","Preposition"], ans: "Preposition" },
+        ]
+      }
+    ]
+  },
+  {
+    title: "Error Correction",
+    chip: "MCQ",
+    sub: "Choose the correct version of the sentence.",
+    questions: [
+      { type:"mcq", q:"She don't write a letter. → Correct form:", options:["She doesn't writes a letter.","She does not write a letter.","She not write a letter.","She didn't write a letter."], ans:1 },
+      { type:"mcq", q:"Do she writes a letter? → Correct form:", options:["Does she writes a letter?","Does she write a letter?","Do she write a letter?","She does write a letter?"], ans:1 },
+      { type:"mcq", q:"They plays cricket. → Correct form:", options:["They is playing cricket.","They played cricket.","They play cricket.","They does play cricket."], ans:2 },
+      { type:"mcq", q:"He walk slowly. → Correct form:", options:["He walks slowly.","He walking slowly.","He do walk slowly.","He walked slowly."], ans:0 },
+      { type:"mcq", q:"The cat is under of the chair. → Correct form:", options:["The cat is under in the chair.","The cat is below the chair.","The cat is under the chair.","The cat under is the chair."], ans:2 },
+      { type:"mcq", q:"Ravi and Kumar is friends. → Correct form:", options:["Ravi and Kumar was friends.","Ravi and Kumar are friends.","Ravi and Kumar being friends.","Ravi and Kumar were friends."], ans:1 },
+      { type:"mcq", q:"She does not writes a letter. → Correct form:", options:["She does not wrote a letter.","She does not written a letter.","She does not write a letter.","She not write a letter."], ans:2 },
+      { type:"mcq", q:"Does they play cricket? → Correct form:", options:["Do they play cricket?","Do they plays cricket?","Does they plays cricket?","Does they played cricket?"], ans:0 },
+      { type:"mcq", q:"He is a good noun. (Underlined: noun = 'He') Which part of speech is 'He'?", options:["Noun","Verb","Pronoun","Adjective"], ans:2 },
+      { type:"mcq", q:"She write very quickly. → Correct form:", options:["She writes very quickly.","She do write very quickly.","She written very quickly.","She writing very quickly."], ans:0 },
+    ]
+  },
+  {
+    title: "Mixed Quiz",
+    chip: "Mixed",
+    sub: "A mix of all topics — Parts of Speech and Tenses.",
+    questions: [
+      { type:"mcq", q:"How many parts of speech are there?", options:["6","7","8","9"], ans:2 },
+      { type:"mcq", q:"Which of these is NOT a part of speech?", options:["Adverb","Tense","Pronoun","Interjection"], ans:1 },
+      { type:"mcq", q:"How many main tenses are there?", options:["2","3","4","5"], ans:1 },
+      { type:"mcq", q:"How many forms does each tense have?", options:["2","3","4","5"], ans:2 },
+      { type:"mcq", q:"'Because' is an example of:", options:["Preposition","Pronoun","Conjunction","Adjective"], ans:2 },
+      { type:"mcq", q:"Which is a verb?", options:["Dog","Slowly","Drive","Happy"], ans:2 },
+      { type:"mcq", q:"Which is a noun?", options:["Eat","School","Quickly","She"], ans:1 },
+      { type:"mcq", q:"Which is an adjective?", options:["Walk","Near","Sad","Hurrah!"], ans:2 },
+      { type:"mcq", q:"Which is a preposition?", options:["She","Between","Wow!","Run"], ans:1 },
+      { type:"mcq", q:"'Simple, Continuous, Perfect, Perfect Continuous' are forms of:", options:["Parts of Speech","Nouns","Tenses","Adjectives"], ans:2 },
+      { type:"tf", q:"The word 'Mobile' is an example of a noun.", ans:"True" },
+      { type:"tf", q:"Simple Present Tense can express habits.", ans:"True" },
+      { type:"tf", q:"An interjection joins two sentences.", ans:"False" },
+      { type:"tf", q:"'Does' is used with plural subjects.", ans:"False" },
+    ]
+  }
+];
+
+// ===================== RENDER =====================
+let totalAnswered = 0, totalCorrect = 0;
+const allAnswered = {};
+let matchAnswers = {};
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  let qGlobal = 0;
+
+  sections.forEach((sec, si) => {
+    const secDiv = document.createElement('div');
+    secDiv.className = 'section';
+    secDiv.innerHTML = `
+      <div class="section-title">${sec.title} <span class="chip">${sec.chip}</span></div>
+      <div class="section-sub">${sec.sub}</div>
+    `;
+
+    sec.questions.forEach((q, qi) => {
+      qGlobal++;
+      const id = `q_${si}_${qi}`;
+      const card = document.createElement('div');
+      card.className = 'q-card';
+      card.id = `card_${id}`;
+
+      if (q.type === 'mcq') {
+        card.innerHTML = `
+          <div class="q-num">Question ${qGlobal}</div>
+          <div class="q-text">${q.q}</div>
+          <div class="options" id="opts_${id}">
+            ${q.options.map((o,oi)=>`
+              <div class="option" onclick="pickMCQ('${id}',${oi},${q.ans})" id="opt_${id}_${oi}">
+                <span class="opt-key">${['A','B','C','D'][oi]}</span> ${o}
+              </div>`).join('')}
+          </div>
+          <div class="feedback" id="fb_${id}"></div>
+        `;
+      } else if (q.type === 'tf') {
+        card.innerHTML = `
+          <div class="q-num">Question ${qGlobal}</div>
+          <div class="q-text">${q.q}</div>
+          <div class="tf-wrap">
+            <button class="tf-btn" onclick="pickTF('${id}','True','${q.ans}')" id="tf_${id}_True">✅ True</button>
+            <button class="tf-btn" onclick="pickTF('${id}','False','${q.ans}')" id="tf_${id}_False">❌ False</button>
+          </div>
+          <div class="feedback" id="fb_${id}"></div>
+        `;
+      } else if (q.type === 'fill') {
+        card.innerHTML = `
+          <div class="q-num">Question ${qGlobal}</div>
+          <div class="q-text">${q.q}</div>
+          <div class="fill-wrap">
+            <input class="fill-input" id="fill_${id}" placeholder="Type your answer…" oninput="clearFill('${id}')"/>
+            <button class="check-btn" id="fillbtn_${id}" onclick="checkFill('${id}','${q.ans}')">Check ✓</button>
+          </div>
+          <div class="feedback" id="fb_${id}"></div>
+        `;
+      } else if (q.type === 'match') {
+        matchAnswers[id] = {};
+        card.innerHTML = `
+          <div class="q-num">Question ${qGlobal} – Match the Column</div>
+          <div class="match-wrap" id="match_${id}">
+            ${q.pairs.map((p,pi) => `
+              <div class="match-row">
+                <div class="match-term">${p.term}</div>
+                <div class="match-arrow">→</div>
+                <select class="match-sel" id="ms_${id}_${pi}" onchange="matchChange('${id}',${pi},'${p.ans}')">
+                  <option value="">-- Select --</option>
+                  ${p.options.map(o=>`<option value="${o}">${o}</option>`).join('')}
+                </select>
+              </div>
+            `).join('')}
+          </div>
+          <div style="margin-top:10px;">
+            <button class="check-btn" onclick="checkMatch('${id}',${JSON.stringify(q.pairs).replace(/"/g,"'")})">Check All ✓</button>
+          </div>
+          <div class="feedback" id="fb_${id}"></div>
+        `;
+      }
+
+      secDiv.appendChild(card);
+    });
+
+    container.appendChild(secDiv);
+  });
+}
+
+function updateStats() {
+  document.getElementById('answeredQ').textContent = totalAnswered;
+  document.getElementById('correctQ').textContent = totalCorrect;
+  const pct = totalAnswered ? Math.round((totalCorrect/totalAnswered)*100) : 0;
+  document.getElementById('scoreQ').textContent = pct + '%';
+}
+
+function pickMCQ(id, chosen, correct) {
+  if (allAnswered[id]) return;
+  allAnswered[id] = true;
+  totalAnswered++;
+  const isRight = chosen === correct;
+  if (isRight) totalCorrect++;
+
+  const opts = document.querySelectorAll(`#opts_${id} .option`);
+  opts.forEach((o, i) => {
+    if (i === correct) o.classList.add('reveal-correct');
+    if (i === chosen && !isRight) o.classList.add('wrong');
+  });
+
+  const fb = document.getElementById(`fb_${id}`);
+  fb.textContent = isRight ? '✅ Correct!' : `❌ Wrong. Correct answer: ${['A','B','C','D'][correct]}`;
+  fb.className = `feedback show ${isRight?'correct-fb':'wrong-fb'}`;
+  updateStats();
+}
+
+function pickTF(id, chosen, correct) {
+  if (allAnswered[id]) return;
+  allAnswered[id] = true;
+  totalAnswered++;
+  const isRight = chosen === correct;
+  if (isRight) totalCorrect++;
+
+  ['True','False'].forEach(v => {
+    const btn = document.getElementById(`tf_${id}_${v}`);
+    if (v === correct) btn.classList.add('correct');
+    if (v === chosen && !isRight) btn.classList.add('wrong');
+  });
+
+  const fb = document.getElementById(`fb_${id}`);
+  fb.textContent = isRight ? '✅ Correct!' : `❌ Wrong. The answer is: ${correct}`;
+  fb.className = `feedback show ${isRight?'correct-fb':'wrong-fb'}`;
+  updateStats();
+}
+
+function clearFill(id) {
+  const inp = document.getElementById(`fill_${id}`);
+  inp.classList.remove('correct','wrong');
+  const fb = document.getElementById(`fb_${id}`);
+  fb.className = 'feedback';
+}
+
+function checkFill(id, correct) {
+  if (allAnswered[id]) return;
+  const inp = document.getElementById(`fill_${id}`);
+  const val = inp.value.trim().toLowerCase();
+  if (!val) return;
+  allAnswered[id] = true;
+  totalAnswered++;
+  const isRight = val === correct.toLowerCase();
+  if (isRight) totalCorrect++;
+
+  inp.classList.add(isRight ? 'correct' : 'wrong');
+  document.getElementById(`fillbtn_${id}`).disabled = true;
+
+  const fb = document.getElementById(`fb_${id}`);
+  fb.textContent = isRight ? '✅ Correct!' : `❌ Wrong. Correct answer: "${correct}"`;
+  fb.className = `feedback show ${isRight?'correct-fb':'wrong-fb'}`;
+  updateStats();
+}
+
+function matchChange(id, pi, correct) {
+  matchAnswers[id][pi] = { val: document.getElementById(`ms_${id}_${pi}`).value, correct };
+}
+
+function checkMatch(id, pairs) {
+  if (allAnswered['match_'+id]) return;
+  allAnswered['match_'+id] = true;
+  let right = 0;
+  pairs.forEach((p, pi) => {
+    const sel = document.getElementById(`ms_${id}_${pi}`);
+    const chosen = sel.value;
+    totalAnswered++;
+    if (chosen === p.ans) { right++; totalCorrect++; sel.classList.add('correct'); }
+    else { sel.classList.add('wrong'); }
+    sel.disabled = true;
+  });
+  const fb = document.getElementById(`fb_${id}`);
+  fb.textContent = `You got ${right}/${pairs.length} correct!`;
+  fb.className = `feedback show ${right===pairs.length?'correct-fb':'wrong-fb'}`;
+  updateStats();
+}
+
+function showResult() {
+  const total = totalAnswered;
+  const correct = totalCorrect;
+  const pct = total ? Math.round((correct/total)*100) : 0;
+  let emoji = pct >= 80 ? '🎉' : pct >= 60 ? '👍' : pct >= 40 ? '📚' : '💪';
+  let title = pct >= 80 ? 'Excellent!' : pct >= 60 ? 'Good Job!' : pct >= 40 ? 'Keep Practicing!' : 'Keep Going!';
+
+  document.getElementById('res-emoji').textContent = emoji;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-score').innerHTML = `You scored <strong>${correct}/${total}</strong> (${pct}%)`;
+  const overlay = document.getElementById('overlay');
+  overlay.classList.add('show');
+  setTimeout(() => { document.getElementById('res-bar').style.width = pct + '%'; }, 100);
+}
+
+function retryAll() {
+  location.reload();
+}
+
+buildQuiz();
+// count total
+let t = 0;
+sections.forEach(s => s.questions.forEach(q => t += (q.type==='match' ? q.pairs.length : 1)));
+document.getElementById('totalQ').textContent = t;
+</script>
+</body>
+</html>
